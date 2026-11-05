@@ -1,0 +1,69 @@
+# The whole CRM on your machine: MongoDB, the Django API and the Next.js dashboard.
+#
+#   docker compose up --build
+#
+# Dashboard  http://localhost:3000
+# API        http://localhost:8000/api/   (docs: http://localhost:8000/api/docs/)
+#
+# The API loads the CSVs in api/data into MongoDB when it starts. To use MongoDB
+# Atlas instead of the local container, see .env.example.
+
+name: crm
+
+services:
+  mongo:
+    image: mongo:8.0
+    # --quiet keeps the health checks out of its log. `attach: false` leaves its log out of
+    # `docker compose up`; `docker compose logs mongo` still shows it.
+    command: ["--quiet"]
+    attach: false
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: ./api
+    environment:
+      MONGODB_URI: ${MONGODB_URI:-mongodb://mongo:27017}
+      MONGODB_PASSWORD: ${MONGODB_PASSWORD:-}
+      MONGODB_DB: ${MONGODB_DB:-crm}
+      SEED_DATA: ${SEED_DATA:-true}
+      DJANGO_DEBUG: "false"
+      # "api" is the name the dashboard reaches it by on the compose network.
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,api
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-local-docker-only-not-a-secret-set-DJANGO_SECRET_KEY-to-change}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      # Healthy once it answers a query, which means MongoDB is reachable and loaded.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/analytics/summary/', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      retries: 12
+      start_period: 30s
+
+  client:
+    build: ./client
+    environment:
+      API_URL: http://api:8000
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/icon.svg').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+volumes:
+  mongo-data:

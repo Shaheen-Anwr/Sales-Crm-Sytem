@@ -1,0 +1,2 @@
+# Settings for docker compose; may hold the Atlas password
+.env

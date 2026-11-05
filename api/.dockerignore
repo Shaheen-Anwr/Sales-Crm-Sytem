@@ -1,0 +1,10 @@
+# Kept out of the image: the local virtualenv, the local SQLite database, and
+# .env, which holds the Atlas password (compose passes settings as variables).
+venv/
+.env
+db.sqlite3
+staticfiles/
+**/__pycache__/
+*.pyc
+Dockerfile
+.dockerignore
