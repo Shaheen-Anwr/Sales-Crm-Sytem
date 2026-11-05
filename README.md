@@ -2,10 +2,29 @@
 
 A sales dashboard built on a Django API and MongoDB.
 
+![The Overview page: revenue, deals won, win rate, deal size and sales cycle, then revenue over time, the pipeline, won vs lost deals, top agents, offices, products and sectors](docs/screenshots/overview.png)
+
 | Folder    | What it is                                                                  |
 | --------- | --------------------------------------------------------------------------- |
 | `api/`    | Django REST API over MongoDB, the CSV import script and the source CSVs       |
 | `client/` | Next.js dashboard with the charts and tables (see `client/README.md`)         |
+
+## Screenshots
+
+**Comparing periods.** Pick a quarter or a custom range and each figure shows its change
+against the period before. Weeks or months only partly inside the range are marked.
+
+![The Overview for Q2 2017 by week, with changes against Q1 2017](docs/screenshots/period-comparison.png)
+
+| Deals | Team |
+| ----- | ---- |
+| ![The Deals page: stage tabs with counts, search, filters and a sortable, paged table](docs/screenshots/deals.png) | ![The Team page: revenue per office, revenue by office over time, revenue by manager and the agents table](docs/screenshots/team.png) |
+| **Products** | **Accounts** |
+| ![The Products page: revenue per product series over time, win rate by product and the products table](docs/screenshots/products.png) | ![The Accounts page: the top 10 accounts, revenue by country and the searchable accounts table](docs/screenshots/accounts.png) |
+
+| Dark mode | On a phone |
+| --------- | ---------- |
+| ![The Overview in dark mode](docs/screenshots/overview-dark.png) | <img src="docs/screenshots/phone.png" alt="The Overview on a phone, with the filters behind one button" width="240"> |
 
 ## Run it with Docker
 
