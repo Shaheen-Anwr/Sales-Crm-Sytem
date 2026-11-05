@@ -142,7 +142,7 @@ export function DealsView({ rows, counts, agents, products, page, pages, total, 
       </div>
 
       <div className="mt-2 mb-4 flex flex-wrap items-center gap-2">
-        <div className="relative w-full sm:w-80">
+        <div className="relative w-full sm:w-96">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"

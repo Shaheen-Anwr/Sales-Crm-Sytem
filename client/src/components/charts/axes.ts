@@ -10,6 +10,8 @@ export const X_AXIS = {
   tick: TICK,
   tickMargin: 8,
   minTickGap: 20,
+  // Every nth label, evenly spaced, rather than whichever ones happen to fit.
+  interval: "equidistantPreserveStart",
 } as const
 
 export const Y_AXIS = {
